@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "BTC Address Monitor",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Let's you monitor balance changes on Bitcoin addresses.",
+    "description": "The description of the application"
+  }
+}

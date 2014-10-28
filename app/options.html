@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css styles/main.css -->
+        <link href="styles/main.css" rel="stylesheet">
+        <!-- endbuild -->
+    </head>
+    <body ng-app="monitorApp">
+        <h1>Monitored addresses:</h1>
+
+        <div ng-controller="ListCtrl">
+            <span><b>{{addresses.length}}</b> Bitcoin addresses monitored</span>
+            <ul>
+                <li ng-repeat="a in addresses">
+                    <strong>{{a.label}}</strong>
+                    <span class="text-muted">{{a.address}}</span>
+                    <a class="text-danger glyphicon glyphicon-remove" ng-click="remove(a)"></a>
+                </li>
+            </ul>
+            <form ng-submit="addAddr()">
+                <input ng-model="label"
+                    placeholder="Label (optional)"
+                    type="text"
+
+                    maxlength="10" />
+
+                <input ng-model='address'
+                    placeholder="Bitcoin address"
+                    type="text"
+                    size="34"
+
+                    maxlength="34"
+                    pattern="^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
+                    required />
+
+                <input
+                    type="submit"
+                    class="btn btn-primary"
+                    value="add" />
+            </form>
+        </div>
+
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:js scripts/options.js -->
+        <script src="scripts/options.js"></script>
+        <!-- endbuild -->
+    </body>
+</html>
+
+<!-- show in USD -->
+
+<!-- BTC; milli; nano -->
