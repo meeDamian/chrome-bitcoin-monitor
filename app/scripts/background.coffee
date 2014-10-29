@@ -1,6 +1,6 @@
 'use strict'
 
-DIVIDER = 1e5
+DIVIDER = 1e8
 FIAT = true
 
 wss = null
@@ -13,6 +13,16 @@ labels = {}
 
 fetchAddresses = (cb) ->
   chrome.storage.sync.get null, (data) ->
+    display = data._display ? 'usd'
+
+    fiat = display is 'usd'
+
+    DIVIDER = 1e8 if display is 'xbc'
+    DIVIDER = 1e5 if display is 'mxbc'
+    DIVIDER = 1e2 if display is 'uxbc'
+
+    delete data._display
+
     labels = data
     cb? data
 
@@ -202,6 +212,8 @@ chrome.notifications.onButtonClicked.addListener (id, btnIdx) ->
 
 # When list of addresses changes
 chrome.storage.onChanged.addListener (changes) ->
+  return if changes._display?
+
   console.log 'changes', changes
 
   fetchAddresses()

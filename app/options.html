@@ -50,19 +50,20 @@
 
         <div ng-controller='OptsCtrl'>
             <h2>Display as</h2>
-
-            <label class="radio-inline">
-                <input type="radio" name="displayOption" value="usd" checked> $ (USD)
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="displayOption" value="xbt"> ฿ (XBC)
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="displayOption" value="mxbt"> m฿ (mXBC)
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="displayOption" value="uxbt"> μ฿ (μXBC)
-            </label>
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="displayOption" value="usd" checked> $ (USD)
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="displayOption" value="xbt"> ฿ (XBC)
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="displayOption" value="mxbt"> m฿ (mXBC)
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="displayOption" value="uxbt"> μ฿ (μXBC)
+                </label>
+            </form>
 
         </div>
 
