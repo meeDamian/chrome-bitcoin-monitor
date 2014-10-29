@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/chester1000/chrome-bitcoin-monitor.svg)](https://travis-ci.org/chester1000/chrome-bitcoin-monitor)
