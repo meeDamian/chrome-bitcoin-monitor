@@ -1,53 +1,6 @@
 (function() {
   'use strict';
-  var DIVIDER, FIAT, addresses, callFake, fetchAddresses, findIntersection, getAmount, labels, notifyNewTx, processTx, qqqq, sendFakeMsgs, setDefaultBadge, setIncomingBadge, setLastTxBadge, setOutcomingBadge, wss, wssConnect, wssReconnect, wssSubscribe;
-
-  qqqq = {
-    fake: true,
-    ports: [],
-    data: '{\"op\":\"utx\",\"x\":{\"hash\":\"638458a765d3d0120198df2d4aeda4ff21cec4cf35cab84d32f18ccab7f8bbef\",\"vin_sz\":1,\"vout_sz\":2,\"lock_time\":\"Unavailable\",\"size\":258,\"relayed_by\":\"127.0.0.1\",\"tx_index\":67831480,\"time\":1414515372,\"inputs\":[{\"prev_out\":{\"value\":10590371,\"addr\":\"1LmssUWuFkdkveNnUQEdXfRmCWck5sEwc4\",\"type\":0}}],\"out\":[{\"value\":281698,\"addr\":\"1DamianM2k8WfNEeJmyqSe2YW1upB7UATx\",\"type\":0},{\"value\":10298673,\"addr\":\"1LmssUWuFkdkveNnUQEdXfRmCWck5sEwc4\",\"type\":0}]}}',
-    source: null,
-    lastEventId: '',
-    origin: 'wss://ws.blockchain.info',
-    path: {
-      length: 0
-    },
-    'cancelBubble': false,
-    'returnValue': true,
-    'srcElement': {
-      'binaryType': 'blob',
-      'protocol': '',
-      'extensions': 'permessage-deflate;client_max_window_bits=15',
-      'bufferedAmount': 0,
-      'readyState': 1,
-      'url': 'wss://ws.blockchain.info/inv',
-      'URL': 'wss://ws.blockchain.info/inv'
-    },
-    'defaultPrevented': false,
-    'timeStamp': 1414515373275,
-    'cancelable': false,
-    'bubbles': false,
-    'eventPhase': 2,
-    'currentTarget': {
-      'binaryType': 'blob',
-      'protocol': '',
-      'extensions': 'permessage-deflate;client_max_window_bits=15',
-      'bufferedAmount': 0,
-      'readyState': 1,
-      'url': 'wss://ws.blockchain.info/inv',
-      'URL': 'wss://ws.blockchain.info/inv'
-    },
-    'target': {
-      'binaryType': 'blob',
-      'protocol': '',
-      'extensions': 'permessage-deflate;client_max_window_bits=15',
-      'bufferedAmount': 0,
-      'readyState': 1,
-      'url': 'wss://ws.blockchain.info/inv',
-      'URL': 'wss://ws.blockchain.info/inv'
-    },
-    'type': 'message'
-  };
+  var DIVIDER, FIAT, addresses, fetchAddresses, findIntersection, getAmount, getBitcoinAmont, getExchangeRate, labels, notifyNewTx, processTx, setDefaultBadge, setIncomingBadge, setLastTxBadge, setOutcomingBadge, setTitle, wss, wssConnect, wssReconnect, wssSubscribe;
 
   DIVIDER = 1e5;
 
