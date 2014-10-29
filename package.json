@@ -26,6 +26,10 @@
     "grunt-chrome-manifest": "~0.2.0",
     "grunt-contrib-compress": "~0.9.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chester1000/chrome-bitcoin-monitor.git"
+  },
   "engines": {
     "node": ">=0.8.0"
   }
