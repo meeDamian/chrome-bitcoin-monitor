@@ -2,7 +2,7 @@
   'use strict';
   var DIVIDER, FIAT, addresses, fetchAddresses, findIntersection, getAmount, getBitcoinAmont, getExchangeRate, labels, notifyNewTx, processTx, setDefaultBadge, setIncomingBadge, setLastTxBadge, setOutcomingBadge, setTitle, wss, wssConnect, wssReconnect, wssSubscribe;
 
-  DIVIDER = 1e5;
+  DIVIDER = 1e8;
 
   FIAT = true;
 
@@ -14,6 +14,19 @@
 
   fetchAddresses = function(cb) {
     return chrome.storage.sync.get(null, function(data) {
+      var display, fiat, _ref;
+      display = (_ref = data._display) != null ? _ref : 'usd';
+      fiat = display === 'usd';
+      if (display === 'xbc') {
+        DIVIDER = 1e8;
+      }
+      if (display === 'mxbc') {
+        DIVIDER = 1e5;
+      }
+      if (display === 'uxbc') {
+        DIVIDER = 1e2;
+      }
+      delete data._display;
       labels = data;
       return typeof cb === "function" ? cb(data) : void 0;
     });
@@ -161,6 +174,7 @@
     return getAmount((_ref = tx.my[0]) != null ? _ref.value : void 0, function(amount) {
       return chrome.notifications.create(tx.hash, {
         type: 'basic',
+        priority: 2,
         iconUrl: 'images/icon-128.png',
         title: amount.forNotification + ' have ' + whatHappened,
         message: where + ' your "' + label + '" address',
@@ -230,6 +244,9 @@
 
   chrome.storage.onChanged.addListener(function(changes) {
     var k, v;
+    if (changes._display != null) {
+      return;
+    }
     console.log('changes', changes);
     fetchAddresses();
     for (k in changes) {

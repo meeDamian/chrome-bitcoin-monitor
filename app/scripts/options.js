@@ -7,10 +7,12 @@
         var a, l;
         for (a in data) {
           l = data[a];
-          $scope.addresses.push({
-            label: l,
-            address: a
-          });
+          if (a !== '_display') {
+            $scope.addresses.push({
+              label: l,
+              address: a
+            });
+          }
         }
         return $scope.$apply();
       });
@@ -40,6 +42,19 @@
           return $scope.$apply();
         });
       };
+    }
+  ]).controller('OptsCtrl', [
+    '$scope', function($scope) {
+      chrome.storage.sync.get('_display', function(data) {
+        var _ref;
+        $scope.displayOption = (_ref = data._display) != null ? _ref : 'usd';
+        return $scope.$apply();
+      });
+      return $scope.$watch('displayOption', function(value) {
+        return chrome.storage.sync.set({
+          _display: value
+        });
+      });
     }
   ]);
 
