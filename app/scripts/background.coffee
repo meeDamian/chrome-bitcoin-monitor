@@ -146,6 +146,7 @@ notifyNewTx = (tx) ->
 
     chrome.notifications.create tx.hash,
       type: 'basic'
+      priority: 2
       iconUrl: 'images/icon-128.png' # TODO: change this icon
 
       title: amount.forNotification + ' have ' + whatHappened
