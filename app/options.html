@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -11,10 +12,10 @@
         <!-- endbuild -->
     </head>
     <body ng-app="monitorApp">
-        <h1>Monitored addresses:</h1>
 
         <div ng-controller="ListCtrl">
-            <span><b>{{addresses.length}}</b> Bitcoin addresses monitored</span>
+            <h2>Monitored addresses <small>({{addresses.length}})</small></h2>
+
             <ul>
                 <li ng-repeat="a in addresses">
                     <strong>{{a.label}}</strong>
@@ -22,6 +23,7 @@
                     <a class="text-danger glyphicon glyphicon-remove" ng-click="remove(a)"></a>
                 </li>
             </ul>
+
             <form ng-submit="addAddr()">
                 <input ng-model="label"
                     placeholder="Label (optional)"
@@ -45,6 +47,24 @@
             </form>
         </div>
 
+
+        <div ng-controller='OptsCtrl'>
+            <h2>Display as</h2>
+
+            <label class="radio-inline">
+                <input type="radio" name="displayOption" value="usd" checked> $ (USD)
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="displayOption" value="xbt"> ฿ (XBC)
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="displayOption" value="mxbt"> m฿ (mXBC)
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="displayOption" value="uxbt"> μ฿ (μXBC)
+            </label>
+
+        </div>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
