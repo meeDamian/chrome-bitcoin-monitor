@@ -1,7 +1,7 @@
 'use strict'
 
 DIVIDER = 1e5
-FIAT = false
+FIAT = true
 
 wss = null
 addresses = []
@@ -17,16 +17,41 @@ fetchAddresses = (cb) ->
     cb? data
 
 
-getAmount = (amount, cb) ->
+getExchangeRate = (cb) ->
+  request = new XMLHttpRequest();
+  request.open 'GET', 'https://www.bitstamp.net/api/ticker/', true
+
+  request.onload = ->
+    if request.status >= 200 and request.status < 400
+
+      data = JSON.parse request.responseText
+      cb parseFloat data.last
+
+  request.onerror = ->
+
+  request.send();
+
+getBitcoinAmont = (amount, cb) ->
   prefix = ''
   prefix = 'm' if DIVIDER is 1e5
   prefix = 'μ' if DIVIDER is 1e2
 
   rawAmount = amount / DIVIDER
 
-  cb
-    formatted: prefix + '฿' + rawAmount
-    raw: rawAmount
+  cb prefix + '฿' + rawAmount, rawAmount
+
+getAmount = (amount, cb) ->
+  callback = (notif, badge) ->
+    cb
+      forNotification: notif
+      forBadge: badge ? notif
+      raw: amount
+
+  if FIAT
+    getExchangeRate (last) ->
+      callback '$' + (amount / 1e8 * last).toFixed 2
+
+  else getBitcoinAmont amount, callback
 
 findIntersection = (lst) ->
   lst.filter (n) -> -1 isnt addresses.indexOf n.addr
@@ -42,9 +67,18 @@ processTx = (bcTx) ->
   tx.my = findIntersection tx.in
   tx.type = 'out'
 
+  tmp = findIntersection tx.out
+
+  # outgoing tx
   unless tx.my.length
-    tx.my = findIntersection tx.out
+    tx.my = tmp
     tx.type = 'in'
+
+  # remove 'rest' (if calculable)
+  else
+    # Yes, I do know this part is ugly
+    for o in tmp
+      i.value -= o.value for i in tx.my when o.addr is i.addr
 
   tx
 
@@ -66,6 +100,10 @@ setLastTxBadge = (amount, color) ->
   chrome.browserAction.setBadgeText text: '' + amount
 
   setTimeout setDefaultBadge, 5 * 60 * 1000
+
+
+setTitle = (amount) ->
+  chrome.browserAction.setTitle title: amount
 
 
 #
@@ -100,7 +138,7 @@ notifyNewTx = (tx) ->
       type: 'basic'
       iconUrl: 'images/icon-128.png' # TODO: change this icon
 
-      title: amount.formatted + ' have ' + whatHappened
+      title: amount.forNotification + ' have ' + whatHappened
       message: where + ' your "' + label + '" address'
       contextMessage: addrShort
 
@@ -110,7 +148,10 @@ notifyNewTx = (tx) ->
       ]
 
     , ->
-      badgeFn amount.raw
+      badgeFn amount.forBadge
+
+      getBitcoinAmont amount.raw, (btcAmount) ->
+        setTitle btcAmount
 
 
 #

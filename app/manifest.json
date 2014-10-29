@@ -11,7 +11,8 @@
     "default_locale": "en",
     "permissions": [
         "notifications",
-        "storage"
+        "storage",
+        "https://www.bitstamp.net/"
     ],
     "background": {
         "scripts": [

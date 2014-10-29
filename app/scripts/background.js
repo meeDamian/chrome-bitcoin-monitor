@@ -4,22 +4,13 @@
 
   DIVIDER = 1e5;
 
-  FIAT = false;
+  FIAT = true;
 
   wss = null;
 
   addresses = [];
 
   labels = {};
-
-  callFake = function() {
-    return wss.onmessage(qqqq);
-  };
-
-  sendFakeMsgs = function() {
-    setTimeout(callFake, 1000);
-    return setInterval(callFake, 30000);
-  };
 
   fetchAddresses = function(cb) {
     return chrome.storage.sync.get(null, function(data) {
@@ -28,7 +19,22 @@
     });
   };
 
-  getAmount = function(amount, cb) {
+  getExchangeRate = function(cb) {
+    var request;
+    request = new XMLHttpRequest();
+    request.open('GET', 'https://www.bitstamp.net/api/ticker/', true);
+    request.onload = function() {
+      var data;
+      if (request.status >= 200 && request.status < 400) {
+        data = JSON.parse(request.responseText);
+        return cb(parseFloat(data.last));
+      }
+    };
+    request.onerror = function() {};
+    return request.send();
+  };
+
+  getBitcoinAmont = function(amount, cb) {
     var prefix, rawAmount;
     prefix = '';
     if (DIVIDER === 1e5) {
@@ -38,10 +44,25 @@
       prefix = 'μ';
     }
     rawAmount = amount / DIVIDER;
-    return cb({
-      formatted: prefix + '฿' + rawAmount,
-      raw: rawAmount
-    });
+    return cb(prefix + '฿' + rawAmount, rawAmount);
+  };
+
+  getAmount = function(amount, cb) {
+    var callback;
+    callback = function(notif, badge) {
+      return cb({
+        forNotification: notif,
+        forBadge: badge != null ? badge : notif,
+        raw: amount
+      });
+    };
+    if (FIAT) {
+      return getExchangeRate(function(last) {
+        return callback('$' + (amount / 1e8 * last).toFixed(2));
+      });
+    } else {
+      return getBitcoinAmont(amount, callback);
+    }
   };
 
   findIntersection = function(lst) {
@@ -51,7 +72,7 @@
   };
 
   processTx = function(bcTx) {
-    var i, tx;
+    var i, o, tmp, tx, _i, _j, _len, _len1, _ref;
     tx = {
       hash: bcTx.hash,
       time: bcTx.time,
@@ -69,9 +90,21 @@
     };
     tx.my = findIntersection(tx["in"]);
     tx.type = 'out';
+    tmp = findIntersection(tx.out);
     if (!tx.my.length) {
-      tx.my = findIntersection(tx.out);
+      tx.my = tmp;
       tx.type = 'in';
+    } else {
+      for (_i = 0, _len = tmp.length; _i < _len; _i++) {
+        o = tmp[_i];
+        _ref = tx.my;
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          i = _ref[_j];
+          if (o.addr === i.addr) {
+            i.value -= o.value;
+          }
+        }
+      }
     }
     return tx;
   };
@@ -103,12 +136,15 @@
     return setTimeout(setDefaultBadge, 5 * 60 * 1000);
   };
 
-  notifyNewTx = function(tx, isFake) {
+  setTitle = function(amount) {
+    return chrome.browserAction.setTitle({
+      title: amount
+    });
+  };
+
+  notifyNewTx = function(tx) {
     var addrLength, addrShort, address, badgeFn, label, whatHappened, where, _ref;
-    if (isFake == null) {
-      isFake = false;
-    }
-    console.log('msg' + (isFake ? '(fake)' : ''), tx);
+    console.log('msg', tx);
     if (tx.type === 'in') {
       whatHappened = 'arrived';
       where = 'to';
@@ -123,10 +159,10 @@
     addrLength = address.length;
     addrShort = address.substring(0, addrLength / 2 - 3) + '…' + address.substring(addrLength / 2 + 3, addrLength);
     return getAmount((_ref = tx.my[0]) != null ? _ref.value : void 0, function(amount) {
-      return chrome.notifications.create((isFake ? '' : tx.hash), {
+      return chrome.notifications.create(tx.hash, {
         type: 'basic',
         iconUrl: 'images/icon-128.png',
-        title: amount.formatted + ' have ' + whatHappened,
+        title: amount.forNotification + ' have ' + whatHappened,
         message: where + ' your "' + label + '" address',
         contextMessage: addrShort,
         buttons: [
@@ -136,7 +172,10 @@
           }
         ]
       }, function() {
-        return badgeFn(amount.raw);
+        badgeFn(amount.forBadge);
+        return getBitcoinAmont(amount.raw, function(btcAmount) {
+          return setTitle(btcAmount);
+        });
       });
     });
   };
@@ -174,14 +213,12 @@
   };
 
   wss.onmessage = function(ev) {
-    return notifyNewTx(processTx(JSON.parse(ev.data).x), !!ev.fake);
+    return notifyNewTx(processTx(JSON.parse(ev.data).x));
   };
 
   wss.onerror = function(e) {
     return console.log('error', e);
   };
-
-  sendFakeMsgs();
 
   chrome.runtime.onInstalled.addListener(function(details) {
     return console.log('previousVersion', details.previousVersion);
