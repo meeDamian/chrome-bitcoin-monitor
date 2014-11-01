@@ -26,7 +26,6 @@ fetchAddresses = (cb) ->
     labels = data
     cb? data
 
-
 getExchangeRate = (cb) ->
   request = new XMLHttpRequest();
   request.open 'GET', 'https://www.bitstamp.net/api/ticker/', true

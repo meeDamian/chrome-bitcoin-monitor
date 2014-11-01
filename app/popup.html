@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html style="width: 400px">
     <head>
         <meta charset="utf-8">
         <!-- build:css styles/vendor.css -->
@@ -11,8 +11,25 @@
         <link href="styles/main.css" rel="stylesheet">
         <!-- endbuild -->
     </head>
-    <body>
-        <h1>'Allo, 'Allo!</h1>
+    <body ng-app="monitorApp">
+        <form ng-controller="QuickAddCtrl" ng-submit="addAddr()" class="input-group">
+            <input ng-model="address"
+                class="form-control"
+
+                placeholder="Bitcoin address"
+                type="text"
+                size="34"
+
+                maxlength="34"
+                pattern="^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
+                required />
+
+            <span class="input-group-btn">
+                <button
+                    class="btn btn-default"
+                    type="submit">Add</button>
+            </span>
+        </form>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
