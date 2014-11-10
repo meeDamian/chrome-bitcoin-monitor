@@ -13,7 +13,7 @@ npm update && bower update
 grunt build
 grunt debug
 
-# Load unpacked extension to your Chrome, and have fun
+# Load unpacked extension to your Chrome and have fun
 ```
 
 ### Donations
