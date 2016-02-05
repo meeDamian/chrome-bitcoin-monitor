@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chester1000/chrome-bitcoin-monitor.git"
+    "url": "https://github.com/meeDamian/chrome-bitcoin-monitor.git"
   },
   "engines": {
     "node": ">=0.8.0"

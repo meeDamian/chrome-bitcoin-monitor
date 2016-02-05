@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/chester1000/chrome-bitcoin-monitor.svg)](https://travis-ci.org/chester1000/chrome-bitcoin-monitor)
+[![Build Status](https://travis-ci.org/meeDamian/chrome-bitcoin-monitor.svg)](https://travis-ci.org/meeDamian/chrome-bitcoin-monitor)
 
 ### Quick start
 If you just want to use it [click kere](https://chrome.google.com/webstore/detail/btc-address-monitor/cneciocfhifeoejglgkjmnjcpgdgioji) and enjoy :).
@@ -6,7 +6,7 @@ If you just want to use it [click kere](https://chrome.google.com/webstore/detai
 ### Running locally
 
 ```bash
-git clone git@github.com:chester1000/chrome-bitcoin-monitor.git
+git clone git@github.com:meeDamian/chrome-bitcoin-monitor.git
 cd chrome-bitcoin-monitor
 
 npm update && bower update
